@@ -10,7 +10,7 @@
 
 class Server {
 
-    private static $response_status;
+    public static $response_status;
     private  $signed_url;
     private $itemPage;
 
@@ -30,7 +30,6 @@ class Server {
         }
 
     }
-
 
     /**
      * @params $page ,  $searchItem , $category
@@ -86,7 +85,8 @@ class Server {
         //echo $content;
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        self::setResponseStatus($httpcode);
+       // echo $httpcode;
+        self::$response_status = $httpcode;
 
         curl_close($ch);
 
@@ -111,48 +111,53 @@ class Server {
      */
     public function getJsonResultItems($xml_response){
 
+        //we declare and associative array to hold our data
+
+        //NOTE: THE PRINT STATMENTS ARE USED TO TEST FOR THE VALIDITY OF THE VARIABLE VALUES
+
         print("<table>");
+    echo "<h2>THE RESULTS ARE DISPLAYED BELOW</h2>";
+
         if(!empty($xml_response)) {
+
             foreach ($xml_response->Items->Item as $current) {
-                print("<td><font size='-1'><b>" . $current->ItemAttributes->Title . "</b>");
-                if (isset($current->ItemAttributes->Author)) {
-                    print("<br>Title: " . $current->ItemAttributes->Title);
+
+                if (isset( $current->ItemAttributes->Title)) {
+
+                    print("<br><td><font size='-1'><b>Title:</b> " . $current->ItemAttributes->Title);
                 }
+
+                if (isset($current->ItemAttributes->Author)) {
+
+                    print("<br><b>Author</b>: " . $current->ItemAttributes->Author);
+                }
+
                 if (isset($current->MediumImage->URL)) {
-                    print("<br>Image: " . $current->MediumImage->URL);
+
+                    print("<br><b>Image: </b>" . $current->MediumImage->URL);
                 }
 
                 if (isset($current->EditorialReviews->EditorialReview->Content)) {
-                        print("<br>Review: " . $current->EditorialReviews->EditorialReview->Content);
-                    }
+
+                    print("<br><b>Review:</b> " . $current->EditorialReviews->EditorialReview->Content);
+                }
 
                 if (isset($current->ItemLinks->ItemLink->URL)) {
-                        print("<br>ItemLink: " . $current->ItemLinks->ItemLink->URL);
-                    }
-                if (isset($current->ItemAttributes->PublicationDate)) {
-                        print("<br>Publication Date: " . $current->ItemAttributes->PublicationDate);
-                    }
 
+                 print("<br><b>ItemLink:</b> " . $current->ItemLinks->ItemLink->URL);
+
+                }
+                if (isset($current->ItemAttributes->PublicationDate)){
+
+                   print("<br><b>Publication Date:</b> " . $current->ItemAttributes->PublicationDate);
+
+                }
                     else {
-                        print("<center>No matches found.</center>");
+                            echo "<h3> Sorry There is no Result Set For you Request</h3>";
                     }
-
             }
 
         }
-
-//        $json = json_encode($xml_response , true);
-//
-////        var_dump($json);
-//        return $json;
-
-    }
-    /**
-     * Prepares the response in case it is a success depending on the return status code
-     */
-    public static function prepareSuccessResponse($json){
-
-           var_dump($json);
 
     }
 
@@ -161,26 +166,7 @@ class Server {
      */
     public static function prepareFailureResponse(){
 
-        echo self::$response_status;
-
-    }
-
-
-    /**
-     * returns the response to the client
-     */
-    public static function returnResponse(){
-
-
-        if(self::$response_status == 200){
-
-
-
-        }else{
-
-            // error response
-
-        }
+        echo "OOps! Something wentWrong \n please check  status code  ".self::$response_status;
 
     }
 
@@ -218,22 +204,6 @@ class Server {
     /**
      * @return mixed
      */
-    public function getResponseStatus()
-    {
-        return self::$response_status;
-    }
-
-    /**
-     * @param mixed $response_status
-     */
-    public static function setResponseStatus($response_stat)
-    {
-        self::$response_status = $response_stat;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getSignedUrl()
     {
         return $this->signed_url;
@@ -263,5 +233,9 @@ class Server {
         $this->itemPage = $itemPage;
     }
 
+    public static function getResponseStatus(){
+
+        return self::$response_status;
+    }
 
 }

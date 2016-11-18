@@ -21,7 +21,7 @@ $client = new Client();
 
 
     // client sends get request to url
-    $client->setRequestUrl("https://swapps.biz/hiring/112016/671674439/books.php?next");
+    $client->setRequestUrl("https://swapps.biz/hiring/112016/671674439/books.php?next=1");
     $client->sendGetRequest($client->getRequestUrl());
 
 // server: if next parameter is provided
@@ -29,7 +29,7 @@ $client = new Client();
 
         //Server sends a GET request to that URL
         $server->sendGetRequest($client->getRequestUrl());
-
+       echo  Server::getResponseStatus();
     }else {
 
         //store client querry and category in variables
@@ -72,24 +72,18 @@ $client = new Client();
 
              }
 
-//            $server->getResponseITemPage($parsed_results);
-
-
              //Server: prepares a success response
-//             $server->prepareSuccessResponse($server->getJsonResultItems($xml_response_data));
-
              //Server: return the response
-            $server->returnResponse();
+             $server->getJsonResultItems($xml_response_data);
 
          }else {
 
              echo "in else now";
              //Server: else ie response code !==200
              //server: prepares error response
+             //Server: returns error response
 
              $server->prepareFailureResponse();
-             //Server: returns error response
-             $server->returnResponse();
 
          }
 
