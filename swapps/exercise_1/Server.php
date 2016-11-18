@@ -120,12 +120,23 @@ class Server {
                 }
                 if (isset($current->MediumImage->URL)) {
                     print("<br>Image: " . $current->MediumImage->URL);
-                    if (isset($current->EditorialReviews->Content)) {
-                        print("<br>Review: " . $current->EditorialReviews->Content);
-                    } else {
+                }
+
+                if (isset($current->EditorialReviews->EditorialReview->Content)) {
+                        print("<br>Review: " . $current->EditorialReviews->EditorialReview->Content);
+                    }
+
+                if (isset($current->ItemLinks->ItemLink->URL)) {
+                        print("<br>ItemLink: " . $current->ItemLinks->ItemLink->URL);
+                    }
+                if (isset($current->ItemAttributes->PublicationDate)) {
+                        print("<br>Publication Date: " . $current->ItemAttributes->PublicationDate);
+                    }
+
+                    else {
                         print("<center>No matches found.</center>");
                     }
-                }
+
             }
 
         }
