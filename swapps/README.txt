@@ -19,8 +19,12 @@
 
 ###---------------------------------------------------------------------------------------------------------#
 
+##-------REQUIREMENTS--------------------###
+
+- php5-curl :: to send requests {sudo apt-get install php5-curl} 
+##---------------------------------------###
 Usage:
-        - Just run the file (interface.php from the webserver) and the work is done
+        - Just run the file (index.php from the webserver) and the work is done
 
         Results:
                  - The results obtained are as a result from the request sent to the signed URL based on the
@@ -29,5 +33,5 @@ Usage:
                  - The server arranges the output in a tabular form to show complete access of the objects
                    in a clearer fashion.
 
-                   
+
 

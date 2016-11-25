@@ -13,6 +13,7 @@ class Server {
     public static $response_status;
     private  $signed_url;
     private $itemPage;
+    private static $json_response_data;
 
     /**
      * check in client request of the @next parameter is is found there
@@ -20,7 +21,7 @@ class Server {
      */
     public static function checkForNextParameter($clientUrl){
 
-       self::sendGetRequest($clientUrl);
+        self::sendGetRequest($clientUrl);
 
         if (isset($_GET["next"]))
         {
@@ -61,10 +62,13 @@ class Server {
 
         $signature = base64_encode(hash_hmac("sha256", $url, AWS_API_SECRET_KEY, True));
 
+
         $signature = str_replace("%7E", "~", rawurlencode($signature));
 
-       $signed_signature = str_replace("GET\nwebservices.amazon.com\n/onca/xml\n", "http://webservices.amazon.com/onca/xml?", $url) . "&Signature=" . $signature;
+        $signed_signature = str_replace("GET\nwebservices.amazon.com\n/onca/xml\n", "http://webservices.amazon.com/onca/xml?", $url) . "&Signature=" . $signature;
+
         return $signed_signature;
+
     }
 
     /**
@@ -74,7 +78,6 @@ class Server {
     public function sendGetRequest($sighnedUrl)
     {
 
-      //  echo $sighnedUrl;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL,
@@ -82,10 +85,8 @@ class Server {
         );
         $content = curl_exec($ch);
 
-        //echo $content;
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-       // echo $httpcode;
         self::$response_status = $httpcode;
 
         curl_close($ch);
@@ -99,9 +100,6 @@ class Server {
     public function parseXmlResultSet($parsed_xml){
 
         $xml = simplexml_load_string($parsed_xml);
- //       $json = json_encode($xml , JSON_PRETTY_PRINT);
-
-//        print_r($json);
 
         return $xml;
     }
@@ -111,54 +109,102 @@ class Server {
      */
     public function getJsonResultItems($xml_response){
 
-        //we declare and associative array to hold our data
-
         //NOTE: THE PRINT STATMENTS ARE USED TO TEST FOR THE VALIDITY OF THE VARIABLE VALUES
 
-        print("<table>");
-    echo "<h2>THE RESULTS ARE DISPLAYED BELOW</h2>";
+//        print  "<h2>THE SEARCH RESULTS ARE DISPLAYED BELOW</h2>";
+//        print("<table>");
 
+
+//        if(!empty($xml_response)) {
+//
+//            foreach ($xml_response->Items->Item as $current) {
+//
+//                if (isset( $current->ItemAttributes->Title)) {
+//
+//                    print("<br><b>Title:</b> " . $current->ItemAttributes->Title);
+//                }
+//
+//                if (isset($current->ItemAttributes->Author)) {
+//
+//                    print("<br><b>Author</b>: " . $current->ItemAttributes->Author);
+//                }
+//
+//                if (isset($current->MediumImage->URL)) {
+//
+//                    print("<br><b>Image:</b><img src= '" . $current->MediumImage->URL."'");
+//                }
+//
+//                if (isset($current->EditorialReviews->EditorialReview->Content)) {
+//
+//                    print("<br><b>Review:</b> " . $current->EditorialReviews->EditorialReview->Content);
+//                }
+//
+//                if (isset($current->ItemLinks->ItemLink->URL)) {
+//
+//                 print("<br><b>ItemLink:</b> " . $current->ItemLinks->ItemLink->URL);
+//
+//                }
+//                if (isset($current->ItemAttributes->PublicationDate)){
+//
+//                   print("<br><b>Publication Date:</b> " . $current->ItemAttributes->PublicationDate);
+//                    echo "<br>";
+//                }
+//
+//                    else {
+//                            echo "<h3> Sorry There is no Result Set For you Request</h3>";
+//                    }
+//            }
+//
+//
+//        }
         if(!empty($xml_response)) {
 
+
             foreach ($xml_response->Items->Item as $current) {
+                print('<div style="border-style: solid;border-width: thin;border-radius: 3px;border-color: #333333; padding: 17px">');
+                print('<div>');
+                print('<div style="float:left; width:20%" >');
 
                 if (isset( $current->ItemAttributes->Title)) {
 
-                    print("<br><td><font size='-1'><b>Title:</b> " . $current->ItemAttributes->Title);
+                    print('<h2>'. $current->ItemAttributes->Title.'</h2>');
+
                 }
+                if (isset($current->MediumImage->URL)) {
+
+                    print("<img src='". $current->MediumImage->URL."' style='
+                     width: 150px;
+                    height: 150px;
+                    background-size: cover;
+                    background-position: center;
+                    border-radius: 50%;'>");
+                }
+                print('</div>'); //end of title and image div
+
+                print('<div style="float:left; width:80%">');// start of author public date description
 
                 if (isset($current->ItemAttributes->Author)) {
 
-                    print("<br><b>Author</b>: " . $current->ItemAttributes->Author);
-                }
-
-                if (isset($current->MediumImage->URL)) {
-
-                    print("<br><b>Image: </b>" . $current->MediumImage->URL);
-                }
-
-                if (isset($current->EditorialReviews->EditorialReview->Content)) {
-
-                    print("<br><b>Review:</b> " . $current->EditorialReviews->EditorialReview->Content);
-                }
-
-                if (isset($current->ItemLinks->ItemLink->URL)) {
-
-                 print("<br><b>ItemLink:</b> " . $current->ItemLinks->ItemLink->URL);
-
+                    print('<span>'.$current->ItemAttributes->Author .'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
                 }
                 if (isset($current->ItemAttributes->PublicationDate)){
 
-                   print("<br><b>Publication Date:</b> " . $current->ItemAttributes->PublicationDate);
-
+                    print('<span>'.$current->ItemAttributes->PublicationDate .'</span>');
                 }
-                    else {
-                            echo "<h3> Sorry There is no Result Set For you Request</h3>";
-                    }
+                if (isset($current->EditorialReviews->EditorialReview->Content)) {
+
+                    print("<p>" . $current->EditorialReviews->EditorialReview->Content."</p>");
+                }
+
+                print('</div>');
+
+                print('</div>'); //end large div container
+                print('<div style="clear:both"></div>');
+                print('</div>');
+
             }
 
         }
-
     }
 
     /**
@@ -166,7 +212,7 @@ class Server {
      */
     public static function prepareFailureResponse(){
 
-        echo "OOps! Something wentWrong \n please check  status code  ".self::$response_status;
+        echo "<b>OOps! Something wentWrong \n please check  status code ==> </b>"."<b>".self::$response_status."</b>";
 
     }
 
@@ -194,10 +240,10 @@ class Server {
      */
     public static function getResponseTotalPages($parsed_xml){
 
-       // $value = (int) $parsed_xml->Items->ItemPage;
+        // $value = (int) $parsed_xml->Items->ItemPage;
         $value2 = (int) $parsed_xml->Items->TotalPages;
 
-       // echo $value;
+        // echo $value;
         return $value2;
     }
 
@@ -237,5 +283,14 @@ class Server {
 
         return self::$response_status;
     }
+
+    /**
+     * @return mixed
+     */
+    public static function getJsonResponseData()
+    {
+        return self::$json_response_data;
+    }
+
 
 }
