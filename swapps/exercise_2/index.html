@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Swapps Job Recruitment Exercise 2</title>
+    <link rel="stylesheet" href="stylesheet.css">
+
+</head>
+<body onload="hideMoreButton()">
+
+<div>
+
+    <div class="form-wrapper">
+        <input type="text" name="search" id="search" placeholder="Enter  Search Term..." autocomplete='off' required >
+        <input type="submit" value="Search" class="submit" id="submit" onclick="searchServer('search'), doProgress()" >
+    </div>
+
+    <!--PROGRESS BAR-->
+    <div class="progress"></div>
+
+    <div id="result-div">
+
+        <p id="result"></p>
+    </div>
+
+    <input type="submit" value="more..." class="submit" id="more" onclick="searchServer('more'), doProgress()" >
+
+</div>
+
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content" >
+        <span class="close" onclick="closeModal()">X</span>
+        <p id="errormsg"></p>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" ></script>
+<script src="clientScript.js" type="text/javascript"></script>
+
+<!-- plugins for progress bar-->
+
+
+</body>
+</html>
