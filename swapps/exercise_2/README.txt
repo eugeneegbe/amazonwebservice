@@ -1,11 +1,8 @@
 ##------------ AUTHOR : EGBE EUGENE AGBOR | AS ASPIRANT DEV@SWAPPS --------------##
-##
-##THIS SUBMISSION IS DONE FOR THE PURPOSE OF ACQUIRING A POSITION AS ##
-## PHP Developer recruitment AT SWAPPS Yaounde ##
 
 #####################################################
 
-### EXercise 2 -- HTML and JavaScript skills -- #####
+### EXercise 2 -- HTML and JavaScript and php skills -- Search Engine for AWS #####
 
 #####################################################
 
@@ -33,7 +30,7 @@
 
 ##---------------------------------------###
 Usage:
-        - Run index.html and type a search querry
+        - Run index.html and type a search querry ( Like the Name of a book e.g Algorithms )
         - click on the search button to search
         - On the current page if data appears, click on the "More" Button to paginate
 
