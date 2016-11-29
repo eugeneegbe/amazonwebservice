@@ -1,4 +1,4 @@
-##------------ AUTHOR : EGBE EUGENE AGBOR | AS ASPIRANT DEV@SWAPPS --------------##
+##------------ AUTHOR : EGBE EUGENE AGBOR FOR SWAPPS-------------##
 
 #####################################################
 
